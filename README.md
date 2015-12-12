@@ -15,7 +15,6 @@ __Change directory to a Go package__
         }
   * For package tab completion add this to your `~/.bashrc` too
 
-
         _gopath () {
           local cur
           COMPREPLY=()
@@ -27,8 +26,7 @@ __Change directory to a Go package__
             fi
           done
         }  
-        complete -o nospace -F _gopath gocd
-            
+        complete -o nospace -F _gopath gocd          
   * Either `source ~/.bashrc` or re-open your terminal session
   
                  
