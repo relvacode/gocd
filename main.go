@@ -1,19 +1,21 @@
 package main
 
 import (
-	"os"
-	"log"
-	"path"
 	"errors"
-	"path/filepath"
-	"strings"
 	"fmt"
 	"github.com/renstrom/fuzzysearch/fuzzy"
+	"log"
+	"os"
+	"path"
+	"path/filepath"
+	"strings"
 )
 
-func GetPackage(dir string) (string, error) {
-	pkg := path.Join(os.Getenv("GOPATH"), "src", dir)
-	i, e := os.Stat(pkg); if e != nil {
+// Get a package from its full import path
+func GetPackage(pkgName string) (string, error) {
+	pkg := path.Join(os.Getenv("GOPATH"), "src", pkgName)
+	i, e := os.Stat(pkg)
+	if e != nil {
 		return "", e
 	}
 	if !i.IsDir() {
@@ -32,18 +34,21 @@ func (g GoPackage) Error() string {
 }
 
 type PkgWalker struct {
-	find string // package to find
-	PossibleMatches map[string]string
+	find            string            // package to find
+	PossibleMatches map[string]string // Possible matches from fuzzy search
 }
 
+// Implements filepath.Walker.
+// Uses GoPackage{} as en error when a package is found.
+// If the dirname of the given path fuzzy matches the find key then add it to the slice of PossibleMatches.
 func (w *PkgWalker) walker(path string, fi os.FileInfo, err error) (e error) {
 	if fi.Name() == ".git" || strings.Contains(path, "vendor") {
 		return filepath.SkipDir
 	}
 	if !fi.IsDir() && strings.HasSuffix(fi.Name(), ".go") {
 		pkgName := filepath.Base(filepath.Dir(path))
-		if  pkgName == w.find {
-			return GoPackage{Path:filepath.Dir(path), Name:w.find}
+		if pkgName == w.find {
+			return GoPackage{Path: filepath.Dir(path), Name: w.find}
 		} else if strings.ToLower(pkgName) == strings.ToLower(w.find) {
 			if _, ok := w.PossibleMatches[pkgName]; !ok {
 				w.PossibleMatches[pkgName] = ""
@@ -60,8 +65,9 @@ func (w *PkgWalker) walker(path string, fi os.FileInfo, err error) (e error) {
 	return nil
 }
 
-func (w *PkgWalker) FindPackage(find string) (pkg string, e error) {
-	w.find = find
+// Find a package by the given key
+func (w *PkgWalker) FindPackage(key string) (pkg string, e error) {
+	w.find = key
 	w.PossibleMatches = make(map[string]string)
 	e = filepath.Walk(path.Join(os.Getenv("GOPATH"), "src"), w.walker)
 	if _, ok := e.(GoPackage); ok {
@@ -70,14 +76,16 @@ func (w *PkgWalker) FindPackage(find string) (pkg string, e error) {
 	return
 }
 
+// Returns any possible matches as a comma separated string
 func (w *PkgWalker) SprintMatches() (s string) {
-	for k, _ := range w.PossibleMatches {s += fmt.Sprintf("'%s', ", k)}
+	for k, _ := range w.PossibleMatches {
+		s += fmt.Sprintf("'%s', ", k)
+	}
 	if len(w.PossibleMatches) > 0 {
 		s = s[:len(s)-2]
 	}
 	return
 }
-
 
 func main() {
 	log.SetFlags(0)
