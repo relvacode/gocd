@@ -3,32 +3,10 @@ __Change directory to a Go package__
 
 ## Installation
   * Ensure your Go environment is properly configured (you have $GOPATH set in your environment)
-  * Run `go install`
-  * Paste this into your `~/.bashrc` file  
-  
-        gocd () {
-          if ! dir=$($GOPATH/bin/gocd $1 2>&1); then
-            echo "$dir"
-          else
-            cd "$dir"
-          fi
-        }
-  * For package tab completion add this to your `~/.bashrc` too
-
-        _gopath () {
-          local cur
-          COMPREPLY=()
-          cur=${COMP_WORDS[COMP_CWORD]}
-          k=0
-          for j in $( compgen -f "$GOPATH/src/$cur" ); do
-            if [ -d "$j" ]; then
-              COMPREPLY[k++]=${j#$GOPATH/src/}
-            fi
-          done
-        }  
-        complete -o nospace -F _gopath gocd          
-  * Either `source ~/.bashrc` or re-open your terminal session
-  
+  * Run `go get -v` to install package dependencies
+  * Run `go install` to install into your $GOPATH
+  * Add the contents of `bashrc` to your `~/.bashrc` with `cat bashrc >> ~/.bashrc`
+  * Either `source ~/.bashrc` or re-open your terminal window
                  
 ## Usage
     gocd github.com/me/mypkg
@@ -40,6 +18,8 @@ or
     gocd
 
 gocd scans `$GOROOT/src` and finds the first occurrence matching 'mypkg' that contains .go files.
+gocd uses fuzzy matching for packages that cannot be found to suggest possible matching packages:
+
 
 Running gocd without arguments will change directory to `$GOROOT/src`
 
