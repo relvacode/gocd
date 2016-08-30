@@ -6,8 +6,7 @@ So I created gocd as a simple utility to locate and change directory to a Go pac
 
 ## Installation
   * Ensure your Go environment is properly configured (you have $GOPATH set in your environment)
-  * Run `go get -v bitbucket.org/jrelva/gocd` to install package dependencies
-  * Run `go install bitbucket.org/jrelva/gocd` to install into your $GOPATH
+  * Run `go get -v github.com/relvacode/gocd` to install package dependencies
   * Add the contents of `bashrc` to your `~/.bashrc` with `cat $GOPATH/src/github.com/relvacode/gocd/bashrc >> ~/.bashrc`
   * Either `source ~/.bashrc` or re-open your terminal window
                  
