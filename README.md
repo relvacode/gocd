@@ -1,30 +1,46 @@
 # gocd
 __Change directory to a Go package__
 
-In a multi-package project it's sometimes tedious to have to switch the current directory using `cd $GOPATH/src/github.com/me/pkg`.
+In a multi-package project it's sometimes tedious to have to switch the current directory using `cd $GOPATH/src/github.com/username/pkg`.
 
 gocd is a very simple command line application to automatically change directory based on a go package name.
 
 ## Usage
-    gocd github.com/me/mypkg
-    
-or
 
-    gocd mypkg
-    
-or
+```bash
+$ gocd github.com/username/pkg
+$ gocd username/pkg
+$ gocd pkg
+$ gocd
+```
 
-    gocd
-
-If the package name is the full import path then use that, otherwise gocd scans `$GOPATH/src` and finds the first occurrence matching `mypkg` that contains .go files.
-
-Running gocd without arguments will change directory to `$GOPATH/src`.  
-
-Directories with `vendor` or `.git` in the path are ignored.
+If the package name is the full import path then use that, otherwise gocd scans `$GOPATH/src` and finds the first matching occurence of a directory containing .go files. If no arguments are supplied gocd will change directory to `$GOPATH/src`. Directories with `vendor` or `.git` in the path are ignored.
 
 ## Installation
 
-  * Ensure your Go environment is properly configured (you have `$GOPATH` set in your environment)
+```bash
+$ go get -v github.com/relvacode/gocd
+$ cat $GOPATH/src/github.com/relvacode/gocd/bashrc >> ~/.bashrc
+```
+
   * Run `go get -v github.com/relvacode/gocd` to install package dependencies
   * Add the contents of `bashrc` to your `~/.bashrc` with `cat $GOPATH/src/github.com/relvacode/gocd/bashrc >> ~/.bashrc`
   * Either `source ~/.bashrc` or re-open your terminal window
+
+## Suggestions
+
+If no direct match can be found, `gocd` will look for packages with the top 10 nearest packages using Levenshtein distance.
+
+```bash
+$ gocd golangtext
+golang.org/x/text/currency
+golang.org/x/text/unicode
+golang.org/x/text/message
+golang.org/x/text/collate
+golang.org/x/text/secure
+golang.org/x/text/search
+golang.org/x/text/runes
+golang.org/x/text/width
+golang.org/x/text/cases
+golang.org/x/text
+```
