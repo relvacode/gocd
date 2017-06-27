@@ -29,7 +29,7 @@ $ cat $GOPATH/src/github.com/relvacode/gocd/bashrc >> ~/.bashrc
 
 ## Suggestions
 
-If no direct match can be found, `gocd` will look for packages with the top 10 nearest packages using Levenshtein distance.
+If no direct match can be found, `gocd` will look for the top 10 nearest packages using Levenshtein distance.
 
 ```bash
 $ gocd golangtext
