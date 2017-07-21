@@ -20,11 +20,11 @@ If the package name is the full import path then use that, otherwise gocd scans 
 
 ```bash
 $ go get -v github.com/relvacode/gocd
-$ cat $GOPATH/src/github.com/relvacode/gocd/bashrc >> ~/.bashrc
+$ cat `go env GOPATH`/src/github.com/relvacode/gocd/bashrc >> ~/.bashrc
 ```
 
   * Run `go get -v github.com/relvacode/gocd` to install package dependencies
-  * Add the contents of `bashrc` to your `~/.bashrc` with `cat $GOPATH/src/github.com/relvacode/gocd/bashrc >> ~/.bashrc`
+  * Add the contents of `bashrc` to your `~/.bashrc`
   * Either `source ~/.bashrc` or re-open your terminal window
 
 ## Suggestions
