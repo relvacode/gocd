@@ -73,7 +73,7 @@ func (w *PkgFinder) walker(path string, i os.FileInfo, err error) (e error) {
 		return nil
 	}
 	// Skip if path contains .git or vendor
-	if i.Name() == ".git" || strings.Contains(path, "vendor") {
+	if i.IsDir() && (strings.HasPrefix(i.Name(), ".") || strings.Contains(path, "vendor")) {
 		return filepath.SkipDir
 	}
 	// Ignore if path is a directory or is not a go file.
