@@ -11,6 +11,7 @@ gocd is a very simple command line application to automatically change directory
 $ gocd github.com/username/pkg
 $ gocd username/pkg
 $ gocd pkg
+$ gocd pkg <@>
 $ gocd
 ```
 
@@ -32,15 +33,21 @@ $ cat `go env GOPATH`/src/github.com/relvacode/gocd/bashrc >> ~/.bashrc
 If no direct match can be found, `gocd` will look for the top 10 nearest packages using Levenshtein distance.
 
 ```bash
-$ gocd golangtext
-golang.org/x/text/currency
-golang.org/x/text/unicode
-golang.org/x/text/message
-golang.org/x/text/collate
-golang.org/x/text/secure
-golang.org/x/text/search
-golang.org/x/text/runes
-golang.org/x/text/width
-golang.org/x/text/cases
-golang.org/x/text
+$ gocd txt
+  0 golang.org/x/text/internal/format/plural
+  1 golang.org/x/text/message
+  2 golang.org/x/text/encoding/korean
+  3 golang.org/x/text/encoding/japanese
+  4 golang.org/x/text/collate/tools/colcmp
+  5 golang.org/x/text/encoding/ianaindex
+  6 github.com/kr/text/mc
+  7 golang.org/x/text/internal/utf8internal
+  8 golang.org/x/text/currency
+  9 golang.org/x/text/cases
+```
+
+Go to a specific package at the correct index you wanted by using the index as the second argument
+
+```bash
+$ gocd txt 1 # cd to golang.org/x/text/message
 ```
