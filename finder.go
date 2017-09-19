@@ -10,6 +10,26 @@ import (
 	"github.com/renstrom/fuzzysearch/fuzzy"
 )
 
+type OrderedRanks []fuzzy.Rank
+
+func (r OrderedRanks) Len() int {
+	return len(r)
+}
+
+func (r OrderedRanks) Swap(i, j int) {
+	r[i], r[j] = r[j], r[i]
+}
+
+func (r OrderedRanks) Less(i, j int) bool {
+	if r[i].Distance < r[j].Distance {
+		return true
+	}
+	if r[i].Distance > r[j].Distance {
+		return false
+	}
+	return r[i].Target < r[j].Target
+}
+
 // PkgFinder finds a Go package.
 type PkgFinder struct {
 	gopath string // GOPATH to use
@@ -57,10 +77,10 @@ func (w *PkgFinder) walker(seen map[string]struct{}, find string) filepath.WalkF
 }
 
 // Find a package by the given key
-func (w *PkgFinder) Find(find string) (fuzzy.Ranks, error) {
+func (w *PkgFinder) Find(find string) (OrderedRanks, error) {
 	// If absolute path then go straight to it
 	if path.IsAbs(find) {
-		return fuzzy.Ranks{
+		return OrderedRanks{
 			{
 				Target: find,
 			},
@@ -71,7 +91,7 @@ func (w *PkgFinder) Find(find string) (fuzzy.Ranks, error) {
 	abs := filepath.Join(w.gopath, find)
 	_, err := os.Stat(abs)
 	if err == nil {
-		return fuzzy.Ranks{
+		return OrderedRanks{
 			{
 				Target: abs,
 			},
@@ -82,7 +102,7 @@ func (w *PkgFinder) Find(find string) (fuzzy.Ranks, error) {
 
 	err = filepath.Walk(w.gopath, w.walker(seen, find))
 	if pkg, ok := err.(GoPackage); ok {
-		return fuzzy.Ranks{
+		return OrderedRanks{
 			{
 				Target: pkg.Path,
 			},
@@ -112,7 +132,7 @@ func (w *PkgFinder) Find(find string) (fuzzy.Ranks, error) {
 		return nil, ErrNoMatch
 	}
 
-	found := make(fuzzy.Ranks, len(matches))
+	found := make(OrderedRanks, len(matches))
 	var i int
 	for _, r := range matches {
 		found[i] = r
