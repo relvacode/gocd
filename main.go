@@ -38,6 +38,16 @@ func main() {
 		return
 	}
 
+
+	// Using '^', try to go to the vendor's parent
+	ok, err := TryGoToVendorParent()
+	if err != nil {
+		log.Fatal(err)
+	}
+	if ok {
+		return
+	}
+
 	w := PkgFinder{
 		gopath: path,
 	}
