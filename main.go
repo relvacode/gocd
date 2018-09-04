@@ -38,7 +38,6 @@ func main() {
 		return
 	}
 
-
 	// Using '^', try to go to the vendor's parent
 	ok, err := TryGoToVendorParent()
 	if err != nil {

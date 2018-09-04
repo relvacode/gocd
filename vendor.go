@@ -2,10 +2,10 @@ package main
 
 import (
 	"flag"
-	"os"
-	"strings"
-	"path/filepath"
 	"fmt"
+	"os"
+	"path/filepath"
+	"strings"
 )
 
 const (
@@ -29,7 +29,7 @@ func TryGoToVendorParent() (bool, error) {
 	}
 
 	components := strings.Split(cwd, string(filepath.Separator))
-	for i := len(components) - 1; i  >= 0; i -- {
+	for i := len(components) - 1; i >= 0; i-- {
 		if components[i] == "vendor" {
 			if i == 0 {
 				// "vendor" is at the root of the path
