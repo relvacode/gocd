@@ -65,4 +65,3 @@ Go to the `GOPATH` by calling gocd without arguments
 ```bash
 $ gocd
 ```
-
